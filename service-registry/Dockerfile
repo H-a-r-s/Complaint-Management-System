@@ -1,14 +1,12 @@
-# Use lightweight Java 21 image
-FROM eclipse-temurin:21-jdk-alpine
-
-# Set working directory
+# ---- build stage ----
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
+COPY . .
+RUN mvn -q -DskipTests clean package
 
-# Copy jar file
-COPY target/*.jar app.jar
-
-# Expose port (Render will override using PORT env)
-EXPOSE 8080
-
-# Run the jar
-ENTRYPOINT ["java","-jar","app.jar"]
+# ---- run stage ----
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar","/app/app.jar"]
