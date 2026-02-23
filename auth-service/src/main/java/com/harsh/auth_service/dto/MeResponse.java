@@ -1,13 +1,13 @@
 package com.harsh.auth_service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @Getter
-@Setter
-public class LoginRequest {
+@AllArgsConstructor
+public class MeResponse {
     private String email;
-    private String password;
+    private String role;
 }

@@ -2,16 +2,27 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: API-GATEWAY
-
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
       routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+
         - id: complaint-service
           uri: lb://COMPLAINT-SERVICE
           predicates:
-            - Path=/complaints/**,/admin/**
+            - Path=/complaints/**,/admin/complaints/**
+          filters:
+            - StripPrefix=0
 
 eureka:
   client:
@@ -22,21 +33,3 @@ eureka:
 
 
 
-#cloud:
-#    gateway:
-#      globalcors:
-#        add-to-simple-url-handler-mapping: true
-#        corsConfigurations:
-#          '[/**]':
-#            allowedOrigins:
-#              - "http://localhost:5173"
-#            allowedMethods:
-#              - GET
-#              - POST
-#              - PUT
-#              - PATCH
-#              - DELETE
-#              - OPTIONS
-#            allowedHeaders:
-#              - "*"
-#            allowCredentials: false
