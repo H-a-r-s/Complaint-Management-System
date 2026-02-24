@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeExchange(ex -> ex
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
 
-                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/auth/**","/signup/**", "/login/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
 
                         .pathMatchers(HttpMethod.POST, "/complaints").permitAll()
