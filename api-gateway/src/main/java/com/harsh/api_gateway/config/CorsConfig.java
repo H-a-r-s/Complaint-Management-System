@@ -5,10 +5,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Value("${app.cors.allowed-origins}")
+@Configuration
+public class CorsConfig {
+
+    @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
     @Bean
@@ -21,11 +27,10 @@ import java.util.List;
                 .collect(Collectors.toList());
 
         config.setAllowedOriginPatterns(origins);
-
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
+        config.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
